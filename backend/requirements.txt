@@ -1,0 +1,10 @@
+# backend/requirements.txt
+fastapi
+uvicorn[standard]
+pillow
+torch
+transformers
+accelerate
+huggingface_hub
+numpy
+onnxruntime
