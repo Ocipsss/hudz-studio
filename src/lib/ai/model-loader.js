@@ -8,9 +8,22 @@ let remover = null
 
 export async function getSegmenter(onProgress) {
   if (remover) return remover
-  // FIX: pake background-removal bukan image-segmentation
-  remover = await pipeline('background-removal', 'briaai/RMBG-1.4', {
-    progress_callback: onProgress
+
+  // Pakai MODNet (Satu-satunya model 100% public tanpa Unauthorized 401)
+  remover = await pipeline('image-segmentation', 'Xenova/modnet', {
+    progress_callback: (progressData) => {
+      if (onProgress && typeof onProgress === 'function') {
+        const percent = progressData.progress ? Math.round(progressData.progress) : 0
+        const file = progressData.file ? `Memuat ${progressData.file}...` : 'Memuat model AI...'
+        
+        onProgress({
+          status: progressData.status,
+          file: file,
+          progress: percent
+        })
+      }
+    }
   })
+
   return remover
 }
